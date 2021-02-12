@@ -7,14 +7,14 @@ class Task(object):
 		self.job = job
 		self.task=task
 
-	def __eq__(self, otherTask):
-        return (self.job == otherTask.age) and (self.task == otherTask.task)
+	def __eq__(self, other_task):
+		return (self.job == otherTask.age) and (self.task == otherTask.task)
 
 	def __hash__(self):
-        return hash(self.job, self.task)
+		return hash(self.job, self.task)
 
 	def __str__(self):
-		return "(" + self.job +", " + self.task + ')';
+		return "(" + str(self.job) +", " + str(self.task) + ')'
 
 
 		

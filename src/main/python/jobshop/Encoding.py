@@ -3,4 +3,7 @@ class Encoding(object):
 	def __init__(self, instance):
 		super(Encoding, self).__init__()
 		self.instance = instance
+
+	def toSchedule():
+		pass
 		
