@@ -1,13 +1,18 @@
 import unittest
 import numpy as np
+import logging
 from jobshop.Instance import Instance
 from jobshop.encodings.ResourceOrder import ResourceOrder
 from jobshop.Schedule import Schedule
+from jobshop.solvers.BasicSolver import BasicSolver
+from jobshop.encodings.Task import Task
+
+testing_instance = Instance().fromFile("instances/aaa1")
 
 
 class ResourceOrderTestCase(unittest.TestCase):
     def setup_class(self):
-        self.instance = Instance.fromFile("instances/aaa1")
+        self.instance = testing_instance
         self.ROObject = ResourceOrder(self.instance)
         self.schedule = self.ROObject.toschedule()
 
@@ -20,8 +25,6 @@ class ResourceOrderTestCase(unittest.TestCase):
     def test_to_schedule(self):
         self.assertEqual(True, isinstance(self.schedule, Schedule))
 
-
-
     def test_copy(self):
         CopyROObject = self.ROObject.copy()
         self.assertEqual(type(CopyROObject), type(self.schedule))
@@ -33,7 +36,7 @@ class ResourceOrderTestCase(unittest.TestCase):
 
 class ScheduleTestCase(unittest.TestCase):
     def setup_class(self):
-        self.instance = Instance.fromFile("instances/aaa1")
+        self.instance = testing_instance
         startTimes = np.zeros((self.instance.numJobs,  self.instance.numTasks))
         self.schedule = Schedule(self.instance, startTimes)
 
@@ -59,5 +62,29 @@ class ScheduleTestCase(unittest.TestCase):
         pass
 
 
+class BasicSolverTestCase(unittest.TestCase):
+    def setup_class(self):
+        self.instance = testing_instance
+        self.basic_solver = BasicSolver()
+
+    def test_solve(self):
+        result, sol = self.basic_solver.solve(instance=self.instance, deadline=None)
+        self.assertEqual(True, isinstance(self.instance, Instance))
+
+        self.assertNotEqual(result.instance, None)
+        self.assertEqual(True, isinstance(result.schedule, Schedule))
+        self.assertEqual(True, isinstance(result.instance, Instance))
+        self.assertNotEqual(sol, None)
+        self.assertEqual(12, result.schedule.makespan())
+        self.assertEqual(6, result.schedule.endTime(Task(job=0,task=1)))
+        self.assertEqual(0, result.schedule.startTime())
+        self.assertEqual(0, result.schedule.criticalPath())
+        logging.warning("sol:" + str(sol))
+        logging.warning("result.schedule:" + str(result.schedule))
+        logging.warning("result.instance:" + str(result.instance))
+        logging.warning(result)
+
+
 if __name__ == '__main__':
-    unittest.main()
+    print(testing_instance)
+    #unittest.main()

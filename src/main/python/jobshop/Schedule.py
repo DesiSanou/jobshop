@@ -50,7 +50,7 @@ class Schedule:
     def makespan(self) -> int:
         m= -1
         for j in range(self.pb.numJobs):
-            m = max(m, self.startTime(job=j, task=self.pb.numTasks - 1) + self.pb.duration(job=j, task=self.pb.numTasks - 1))
+            m = max(m, self.startTime(job=j, task=self.pb.numTasks - 1) + self.pb.duration(j, self.pb.numTasks - 1))
         return m
 
     def endTime(self, task: Task) -> int:

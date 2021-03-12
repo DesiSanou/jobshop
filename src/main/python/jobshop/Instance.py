@@ -4,7 +4,7 @@ from jobshop.encodings.Task import Task
 
 
 class Instance:
-    def __init__(self, numJobs, numTasks):
+    def __init__(self, numJobs=0, numTasks=0):
         super(Instance, self).__init__()
         self.numJobs = numJobs
         self.numTasks = numTasks

@@ -6,4 +6,3 @@ class Encoding(object):
 
 	def toSchedule(self):
 		pass
-		
