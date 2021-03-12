@@ -24,10 +24,14 @@ class ResourceOrderTestCase(unittest.TestCase):
 
     def test_to_schedule(self):
         self.assertEqual(True, isinstance(self.schedule, Schedule))
+        self.assertEqual(12, self.schedule.makespan())
+        self.assertEqual(2, self.schedule.pb.numJobs)
+        self.assertEqual(3, self.schedule.pb.numTasks)
 
     def test_copy(self):
         CopyROObject = self.ROObject.copy()
-        self.assertEqual(type(CopyROObject), type(self.schedule))
+        self.assertEqual(type(CopyROObject.toSchedule()), type(self.schedule))
+        self.assertEqual(12, CopyROObject.makespan() )
 
     def test_display(self):
         print(self.ROObject)

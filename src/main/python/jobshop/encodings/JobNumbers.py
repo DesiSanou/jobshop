@@ -37,7 +37,7 @@ class JobNumbers(Encoding):
     def toSchedule(self):
         nextFreeTimeResource = [0]* self.instance.numMachines
         nextTask = [0] * self.instance.numJobs
-        taskList = [0]* self.instance.numTasks
+        taskList = [0] * self.instance.numTasks
         startTimes = [taskList for _ in range(self.instance.numJobs)]
         for job in self.jobs:
             task = nextTask[job]
