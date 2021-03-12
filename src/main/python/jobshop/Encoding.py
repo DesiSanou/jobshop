@@ -4,6 +4,6 @@ class Encoding(object):
 		super(Encoding, self).__init__()
 		self.instance = instance
 
-	def toSchedule():
+	def toSchedule(self):
 		pass
 		
