@@ -4,32 +4,41 @@ from jobshop.Encoding import *
 from jobshop.Schedule import *
 from jobshop.Instance import Instance
 
+
 class ResourceOrder(Encoding):
     def __init__(self, instance):
         super(Encoding, self).__init__()
         self.instance = instance
         super(Instance)
         if isinstance(self.instance, Instance):
-            tasks_on_machine   = [Task(0, 0) for _ in range(instance.numJobs)]  # or 0
-            self.taskByMachine = [tasks_on_machine for _ in range(instance.numMachines)]
+            tasks_on_machine   = [None for _ in range(instance.numJobs)]  # or 0 or Task(0, 0)
+            self.tasksByMachine = [tasks_on_machine for _ in range(instance.numMachines)]
             self.nextFreeSlot  = [0]*instance.numMachines
 
         elif isinstance(self.instance, Schedule):
             pb = instance.pb
-            self.taskByMachine = [[]]*pb.numMachines # or 0 !!!!!!!!!!!!!!!
-            self.nextFreeSlot = [0]*instance.numMachines
+            self.tasksByMachine = [[]]*pb.numMachines # or 0 !!!!!!!!!!!!!!!
+            self.nextFreeSlot = [0]*pb.numMachines
 
             # for this machine, find all tasks that are executed on it and sort them by their start time
-            for m in range(instance.pb.numMachines):
-                machine = m
+            logging.warning( "num_jobs:" + str(pb.numJobs)
+                             + "; num_machines:" + str(pb.numMachines)
+                             + "; num_tasks:" + str(pb.numTasks))
+
+            for m in range(pb.numMachines):
                 task_list_on_machine = list()
                 for job in range(pb.numJobs):
                     # all tasks on this machine (one per job)
-                    task_list_on_machine.append(Task(job, pb.task_with_machine(job, machine)))
-                task_list_on_machine.sort(key=lambda t: self.instance.startTime(t.job, t.task))  # sorted by start time
-                self.taskByMachine[m] = task_list_on_machine
+                    the_task = Task(job, pb.task_with_machine(job=job, wanted_machine=m))
+                    task_list_on_machine.append(the_task)
+                    """logging.warning("\ntask_list_on_machine:" +
+                                    ";job:"+str(job)+";" +
+                                    "; task:"+str(task_list_on_machine[job].task))"""
+                task_list_on_machine = list(sorted(task_list_on_machine, key=lambda t: self.instance.startTime(t.job, t.task)))  # sorted by start time
+                self.tasksByMachine[m] = task_list_on_machine
                 # indicate that all tasks have been initialized for machine m
-                self.nextFreeSlot[m] = instance.numJobs
+                self.nextFreeSlot[m] = pb.numJobs
+            self.instance = self.instance.pb
         else:
             self.instance = None
             logging.error("Unknown instance type")
@@ -55,7 +64,7 @@ class ResourceOrder(Encoding):
             tasks_that_are_next_to_schedule = list()
             for m in range(self.instance.numMachines):
                 if nextToScheduleByMachine[m] < self.instance.numJobs:
-                    tasks_that_are_next_to_schedule.append(self.taskByMachine[m][nextToScheduleByMachine[m]])
+                    tasks_that_are_next_to_schedule.append(self.tasksByMachine[m][nextToScheduleByMachine[m]])
             for mtask in tasks_that_are_next_to_schedule:
                 if mtask.task == nextToScheduleByJob[mtask.job]:
                     schedulable = mtask
@@ -71,7 +80,7 @@ class ResourceOrder(Encoding):
                 else:
                     est = startTimes[t.job][t.task-1] + self.instance.duration(t.job, t.task-1)
                 index_release = int(self.instance.machine(t))
-                est = np.max(est, releaseTimeOfMachine[index_release])
+                est = max(est, releaseTimeOfMachine[index_release])
                 startTimes[t.job][t.task] = est
 
                 # mark the task as scheduled
@@ -89,18 +98,12 @@ class ResourceOrder(Encoding):
         return Schedule(self.instance, startTimes)
 
     def copy(self):
-        return copy.deepcopy(ResourceOrder(self.toschedule()))
+        return copy.deepcopy(self)
 
     def __str__(self):
-        s= ""
+        s = ""
         for m in range(self.instance.numMachines):
-            s += "Machine" + str(m) + ":"
-            tasks_str =";"
-            tasks_str.join(str(self.taskByMachine[m])) #join tasks or machine m
+            s += "\nMachine" + str(m) + ":"
+            tasks_str = ";".join([str(self.tasksByMachine[m][job]) for job in range(self.instance.numJobs)] ) #join tasks or machine m
             s += tasks_str + "\n"
         return s
-
-
-
-
-

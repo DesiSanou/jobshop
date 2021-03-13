@@ -31,11 +31,10 @@ class Instance:
     def task_with_machine(self, job, wanted_machine):
 
         for task in range(self.numTasks):
-            if self.machines(job,task) == wanted_machine:
+            if self.machines[job,task] == wanted_machine:
                 return task
-            else:
-                print("No task targeting machine "+wanted_machine+" on job "+job)
-                break
+        print("No task targeting machine "+ str(wanted_machine)+" on job "+str(job))
+        return None
 
     @staticmethod
     def fromFile(path):

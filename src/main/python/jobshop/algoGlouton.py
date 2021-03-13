@@ -5,14 +5,14 @@ from jobshop.encodings.ResourceOrder import ResourceOrder
 class AlgoGloutonSPT():
 
     def __init__(self, ResOrderObject:ResourceOrder):
-        self.ResourceOrderObject = ResOrderObject
+        self.resource_order = ResOrderObject
 
     def __getWaitingOperationsSPT(self, aJobsList, time):
         """Get waiting jobs at current time in shortest duration order"""
 
         incomingOperations = {}
         assignedJobsForMachine = []
-
+        aJobsList = [job for job in self.resource_order.instance.numJobs
         global machinesList
         for mach in machinesList:
             assignedJobsForMachine = [job for job in aJobsList if job.completed == False and job.machine == mach.name]

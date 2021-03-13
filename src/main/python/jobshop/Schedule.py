@@ -1,6 +1,7 @@
 from typing import List, Union
 from jobshop.Instance import Instance
 import numpy as np
+import logging
 from jobshop.encodings.Task import Task
 
 
@@ -18,9 +19,11 @@ class Schedule:
 
     def startTime(self, job, task=None):
         if task is None:
-            return self.startTime(task.job, task.task)
+            task_instance = job
+            return self.startTime(task_instance.job, task_instance.task)
         else:
-            return self.times[job][task]
+            job_index = job
+            return self.times[job_index][task]
 
     def isValid(self) -> bool:
 
@@ -50,6 +53,7 @@ class Schedule:
     def makespan(self) -> int:
         m= -1
         for j in range(self.pb.numJobs):
+
             m = max(m, self.startTime(job=j, task=self.pb.numTasks - 1) + self.pb.duration(j, self.pb.numTasks - 1))
         return m
 
@@ -69,10 +73,9 @@ class Schedule:
     def criticalPath(self) -> List[Task]:
         ldd: Task
         tmp = [Task(j, self.pb.numTasks - 1) for j in range(self.pb.numJobs)]
-        ldd = max(sorted(tmp, key=lambda x: self.endTime(x), reverse=True))
+        ldd = sorted(tmp, key=lambda x: self.endTime(x), reverse=True)[0]
         assert self.endTime(ldd) == self.makespan()
-
-        path: List[Task]
+        path = list()
         path.insert(0, ldd)
 
         while self.startTime(path[0]) != 0:

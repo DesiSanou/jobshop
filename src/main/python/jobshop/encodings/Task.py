@@ -8,7 +8,7 @@ class Task(object):
 		self.task = task
 
 	def __eq__(self, other_task):
-		return (self.job == other_task.age) and (self.task == other_task.task)
+		return (self.job == other_task.task) and (self.task == other_task.task)
 
 	def __hash__(self):
 		return hash(self.job, self.task)
