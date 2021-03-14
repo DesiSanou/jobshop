@@ -16,24 +16,13 @@ class ResourceOrder(Encoding):
             self.nextFreeSlot  = [0]*instance.numMachines
 
         elif isinstance(self.instance, Schedule):
-            pb = instance.pb
+            pb = self.instance.pb
             self.tasksByMachine = [[]]*pb.numMachines # or 0 !!!!!!!!!!!!!!!
             self.nextFreeSlot = [0]*pb.numMachines
 
             # for this machine, find all tasks that are executed on it and sort them by their start time
-            logging.warning( "num_jobs:" + str(pb.numJobs)
-                             + "; num_machines:" + str(pb.numMachines)
-                             + "; num_tasks:" + str(pb.numTasks))
-
             for m in range(pb.numMachines):
-                task_list_on_machine = list()
-                for job in range(pb.numJobs):
-                    # all tasks on this machine (one per job)
-                    the_task = Task(job, pb.task_with_machine(job=job, wanted_machine=m))
-                    task_list_on_machine.append(the_task)
-                    """logging.warning("\ntask_list_on_machine:" +
-                                    ";job:"+str(job)+";" +
-                                    "; task:"+str(task_list_on_machine[job].task))"""
+                task_list_on_machine = [Task(job, pb.task_with_machine(job=job, wanted_machine=m)) for job in range(pb.numJobs) ]
                 task_list_on_machine = list(sorted(task_list_on_machine, key=lambda t: self.instance.startTime(t.job, t.task)))  # sorted by start time
                 self.tasksByMachine[m] = task_list_on_machine
                 # indicate that all tasks have been initialized for machine m
@@ -58,18 +47,13 @@ class ResourceOrder(Encoding):
         releaseTimeOfMachine = [0]*self.instance.numMachines
         number_of_scheduled_task = 0
         any_match = True
-        iterations = 0
         while any_match:
             schedulable = None
-            tasks_that_are_next_to_schedule = list()
-            for m in range(self.instance.numMachines):
-                if nextToScheduleByMachine[m] < self.instance.numJobs:
-                    tasks_that_are_next_to_schedule.append(self.tasksByMachine[m][nextToScheduleByMachine[m]])
+            tasks_that_are_next_to_schedule = [self.tasksByMachine[m][nextToScheduleByMachine[m]] for m in range(self.instance.numMachines) if nextToScheduleByMachine[m] < self.instance.numJobs ]
             for mtask in tasks_that_are_next_to_schedule:
                 if mtask.task == nextToScheduleByJob[mtask.job]:
                     schedulable = mtask
                     number_of_scheduled_task += 1
-                    logging.warning("Number of tasks scheduled:" + str(number_of_scheduled_task))
                     break
             if schedulable is not None:
                 # we found a schedulable task, lets call it t
@@ -89,12 +73,13 @@ class ResourceOrder(Encoding):
                 # increase the release time of the machine
                 releaseTimeOfMachine[machine] = est + self.instance.duration(t.job, t.task)
             else:
+                logging.warning("Number of tasks scheduled:" + str(number_of_scheduled_task))
                 return None
             any_match_list = [nextToScheduleByJob[j] < self.instance.numTasks for j in range(self.instance.numJobs) ]
-            iterations += 1
             any_match = True in any_match_list
 
         # we exited the loop : all tasks have been scheduled successfully
+        logging.warning("Number of tasks scheduled:" + str(number_of_scheduled_task))
         return Schedule(self.instance, startTimes)
 
     def copy(self):

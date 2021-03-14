@@ -106,18 +106,21 @@ class BasicSolverTestCase(unittest.TestCase):
 
 
 class GreedySolverTestCase(unittest.TestCase):
-    def setup_class(self):
+
+    def setUp(self):
         self.solver = GreedySolver(instance_path)
 
     def test_spt_solver(self):
         self.solver.runSPT()
-        logging.warning("***************************************************************")
-        logging.warning(str(self.solver.resource_order))
-        logging.warning("***************************************************************")
-        logging.warning("makespan:"+ str(self.solver.schedule.makespan()))
+        logging.warning("SPT RessourceOrder:"+str(self.solver.resource_order))
+
+        logging.warning("SPT makespan:"+str(self.solver.resource_order.toschedule().makespan()))
+        self.assertEqual(16, self.solver.resource_order.toschedule().makespan())
+        self.assertEqual(True, False)
+
+    def not_test_lrpt_solver(self):
+        self.solver.runLRPT()
         logging.warning(self.solver.instance.durations)
-        logging.warning(self.solver.schedule.makespan())
-        logging.warning(self.solver.resource_order.instance.machines)
         self.assertEqual(True, False)
 
 if __name__ == '__main__':

@@ -22,7 +22,7 @@ class Instance:
 
     def duration(self, *kwargs):
         if isinstance(kwargs[0], Task):
-            return self.duration(kwargs[0].job, kwargs[0].task)
+            return self.durations[kwargs[0].job, kwargs[0].task]
         else:
             job = kwargs[0]
             task = kwargs[1]

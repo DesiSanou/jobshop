@@ -3,24 +3,49 @@ import logging
 
 from jobshop.Instance import Instance
 from jobshop.encodings.ResourceOrder import ResourceOrder, Task
-from jobshop.solvers.BasicSolver import BasicSolver
 from jobshop.Schedule import Schedule
 
 
 class GreedySolver:
-
     def __init__(self, instance_path):
         self.instance = Instance.fromFile(instance_path)
-        self.schedule = Schedule(pb=self.instance, times=self.instance.durations)
-        self.resource_order = ResourceOrder(instance=self.schedule)
+        self.resource_order = ResourceOrder(instance=Schedule(pb=self.instance,
+                                                              times=self.instance.durations))
 
     def runSPT(self):
         tasks_on_mach = copy.deepcopy(self.resource_order.tasksByMachine)
         for i in range(len(tasks_on_mach)):
             tasks_on_mach[i] = sorted(tasks_on_mach[i], key=lambda t: self.instance.duration(t))
             tasks_on_mach[i] = list(tasks_on_mach[i])
-        print(tasks_on_mach, "\n", self.resource_order.tasksByMachine)
+            logging.warning([str(task) for task in tasks_on_mach[i]])
         self.resource_order.tasksByMachine = tasks_on_mach
 
+    def run_SPT(self):
+        for machine in range(len(self.resource_order.tasksByMachine)):
+            tasks_to_schedule_on_machine = self.resource_order.tasksByMachine[machine].copy()
+            sorted_duration_list = [self.instance.duration(t) for t in tasks_to_schedule_on_machine]
+            sorted_duration_list.sort(reverse=True)
+            scheduled_tasks = list()
+            while len(scheduled_tasks) < len(tasks_to_schedule_on_machine):
+                for task in tasks_to_schedule_on_machine:
+                    if self.instance.duration(task) == sorted_duration_list[-1]:
+                        sorted_duration_list.pop(-1)
+                        scheduled_tasks.append(task)
+            self.resource_order.tasksByMachine[machine] = scheduled_tasks
+
     def runLRPT(self):
-        pass
+        makespan = self.resource_order.toschedule().makespan()
+        for machine in range(len(self.resource_order.tasksByMachine)):
+            tasks_to_schedule_on_machine = self.resource_order.tasksByMachine[machine].copy()
+            sorted_duration_list = [self.instance.duration(t) for t in tasks_to_schedule_on_machine]
+            sorted_duration_list.sort()
+            scheduled_tasks = list()
+            while len(scheduled_tasks) < len(tasks_to_schedule_on_machine):
+
+                for task in tasks_to_schedule_on_machine:
+                    if self.instance.duration(task) == sorted_duration_list[-1]:
+                        sorted_duration_list.pop(-1)
+                        scheduled_tasks.append(task)
+            self.resource_order.tasksByMachine[machine] = scheduled_tasks
+        logging.warning("LRPT makespan:"+str(makespan))
+
