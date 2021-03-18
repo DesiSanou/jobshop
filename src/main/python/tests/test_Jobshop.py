@@ -112,7 +112,7 @@ class GreedySolverTestCase(unittest.TestCase):
 
     def test_spt_solver(self):
         self.solver.runSPT()
-        logging.warning("SPT RessourceOrder:"+str(self.solver.resource_order))
+        logging.warning(str(self.solver.resource_order))
 
         logging.warning("SPT makespan:"+str(self.solver.resource_order.toschedule().makespan()))
         self.assertEqual(16, self.solver.resource_order.toschedule().makespan())
