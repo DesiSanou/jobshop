@@ -7,6 +7,7 @@ from jobshop.Schedule import Schedule
 from jobshop.solvers.BasicSolver import BasicSolver
 from jobshop.encodings.Task import Task
 from jobshop.solvers.GreedySolver import GreedySolver
+from tabulate import tabulate
 
 instance_path = "instances/aaa1"
 testing_instance = Instance().fromFile(instance_path)

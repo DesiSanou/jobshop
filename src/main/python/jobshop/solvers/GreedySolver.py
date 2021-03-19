@@ -13,14 +13,6 @@ class GreedySolver:
                                                               times=self.instance.durations))
 
     def runSPT(self):
-        tasks_on_mach = copy.deepcopy(self.resource_order.tasksByMachine)
-        for i in range(len(tasks_on_mach)):
-            tasks_on_mach[i] = sorted(tasks_on_mach[i], key=lambda t: self.instance.duration(t))
-            tasks_on_mach[i] = list(tasks_on_mach[i])
-            logging.warning([str(task) for task in tasks_on_mach[i]])
-        self.resource_order.tasksByMachine = tasks_on_mach
-
-    def run_SPT(self):
         for machine in range(len(self.resource_order.tasksByMachine)):
             tasks_to_schedule_on_machine = self.resource_order.tasksByMachine[machine].copy()
             sorted_duration_list = [self.instance.duration(t) for t in tasks_to_schedule_on_machine]
@@ -32,6 +24,7 @@ class GreedySolver:
                         sorted_duration_list.pop(-1)
                         scheduled_tasks.append(task)
             self.resource_order.tasksByMachine[machine] = scheduled_tasks
+            return self.resource_order
 
     def runLRPT(self):
         makespan = self.resource_order.toschedule().makespan()
