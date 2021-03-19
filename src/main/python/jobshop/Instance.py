@@ -61,6 +61,5 @@ class Instance:
                 init += 1
             return pb
 
-
-
-
+    def __str__(self):
+        return "Instance numJobs:"+ str(self.numJobs)+"; numTasks:"+ str(self.numTasks)+"; numMachines:"+str(self.numMachines)

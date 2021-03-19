@@ -4,6 +4,7 @@ from jobshop.Instance import Instance
 from jobshop.Schedule import Schedule
 from jobshop.encodings.Task import Task
 
+
 class JobNumbers(Encoding):
     def __init__(self, intance_or_schedule):
         self.nextToSet = 0
@@ -53,3 +54,4 @@ class JobNumbers(Encoding):
 
     def __str__(self):
         return str(self.jobs[0:self.nextToSet])
+

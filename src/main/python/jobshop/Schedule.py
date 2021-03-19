@@ -36,7 +36,7 @@ class Schedule:
                 if self.startTime(j, t) < 0:
                     return False
 
-        for machine in range(self.pb.machines):
+        for machine in range(self.pb.numMachines):
             for j1 in range(self.pb.numJobs):
                 t1 = self.pb.task_with_machine(j1, machine)
                 for j2 in range(j1 + 1, self.pb.numJobs):
