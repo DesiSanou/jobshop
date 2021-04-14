@@ -6,7 +6,7 @@ from jobshop.encodings.ResourceOrder import ResourceOrder
 
 class ResourceOrderTestCase(unittest.TestCase):
     def setup_class(self):
-        self.instance = Instance.fromFile("../jobshop/instances/abz8")
+        self.instance = Instance.fromFile("../jobshop/instances/abz5")
         self.ROObject = ResourceOrder(self.instance)
         self.schedule = self.ROObject.toschedule()
 

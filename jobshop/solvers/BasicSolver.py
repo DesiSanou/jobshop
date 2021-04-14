@@ -21,7 +21,7 @@ if __name__ == '__main__':
     import logging
     from jobshop.Schedule import Schedule
     basic_solver = BasicSolver()
-    instance = Instance().fromFile("../../tests/instances/la08")
+    instance = Instance.fromFile("../instances/aaa1")
     result, sol = basic_solver.solve(instance=instance, deadline=None)
     assert True == isinstance(instance, Instance)
     assert result.instance is not None

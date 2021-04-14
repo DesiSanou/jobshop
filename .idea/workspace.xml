@@ -19,7 +19,14 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6ab2f5a9-29ce-4a73-a0d3-ae1e0802b5e7" name="Default Changelist" comment="" />
+    <list default="true" id="6ab2f5a9-29ce-4a73-a0d3-ae1e0802b5e7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Test/test_BasicSolver.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/test_RessourceOrder.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test/test_RessourceOrder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Test/test_Schedule.py" beforeDir="false" afterPath="$PROJECT_DIR$/Test/test_Schedule.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jobshop/Schedule.py" beforeDir="false" afterPath="$PROJECT_DIR$/jobshop/Schedule.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jobshop/solvers/BasicSolver.py" beforeDir="false" afterPath="$PROJECT_DIR$/jobshop/solvers/BasicSolver.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

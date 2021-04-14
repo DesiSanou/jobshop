@@ -10,6 +10,8 @@ class Schedule:
         self.times = np.zeros((pb.numJobs, pb.numTasks))
         #self.times = [[] for i in range(pb.numJobs)]
 
+        print("times", times)
+
 
         for j in range (pb.numJobs):
             self.times[j] = times[j]

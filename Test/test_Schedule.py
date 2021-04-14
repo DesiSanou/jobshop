@@ -9,7 +9,7 @@ from jobshop.encodings.Task import Task
 class ScheduleTestCase(unittest.TestCase):
     
     def setup_class(self):
-        self.instance = Instance.fromFile("../jobshop/instances/abz8")
+        self.instance = Instance.fromFile("../jobshop/instances/abz5")
         startTimes = np.zeros((self.instance.numJobs, self.instance.numTasks))
         self.ScheduleObject = Schedule(self.instance, startTimes)
 
